@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - 1 Coríntios 1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f0e8;
+            color: #3b2f2f;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            color: #5a3e36;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #8b5e3c;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .question {
+            margin-bottom: 28px;
+            padding: 18px;
+            border-radius: 12px;
+            background: #fdfaf5;
+            border: 1px solid #e7dacb;
+            transition: all 0.3s;
+        }
+        .question.correct {
+            border-left: 6px solid #2e7d32;
+            background: #edf7ed;
+        }
+        .question.incorrect {
+            border-left: 6px solid #c62828;
+            background: #fdecea;
+        }
+
+        .q-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            color: #4a3525;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+        .q-num {
+            background: #8b5e3c;
+            color: white;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        .q-text {
+            flex: 1;
+        }
+
+        .options {
+            margin-left: 20px;
+        }
+        .option {
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .option:hover {
+            background: #f1e7d9;
+        }
+        .option input[type="radio"] {
+            accent-color: #8b5e3c;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .option label {
+            cursor: pointer;
+            font-size: 1rem;
+            color: #3b2f2f;
+        }
+
+        .complete-input {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+        .complete-input input[type="text"] {
+            padding: 10px 14px;
+            border: 2px solid #d4b896;
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 100%;
+            max-width: 400px;
+            transition: border 0.3s;
+            background: #fffef9;
+        }
+        .complete-input input[type="text"]:focus {
+            outline: none;
+            border-color: #8b5e3c;
+            box-shadow: 0 0 0 3px rgba(139,94,60,0.2);
+        }
+
+        .feedback {
+            margin-top: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            min-height: 20px;
+        }
+        .correct-feedback {
+            color: #2e7d32;
+        }
+        .incorrect-feedback {
+            color: #c62828;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 30px auto 10px;
+            padding: 14px 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            background: #8b5e3c;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 12px rgba(139,94,60,0.3);
+        }
+        .btn:hover {
+            background: #6d4a2f;
+            transform: translateY(-2px);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .score {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 12px;
+            background: #fdfaf5;
+            border: 2px solid #e7dacb;
+            font-weight: 700;
+        }
+
+        .reset-btn {
+            background: #fdfaf5;
+            color: #8b5e3c;
+            border: 2px solid #8b5e3c;
+            box-shadow: none;
+        }
+        .reset-btn:hover {
+            background: #f1e7d9;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #e7dacb;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 16px;
+            }
+            .question {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📜 Quiz Interativo</h1>
+        <p class="subtitle">1 Coríntios – Capítulo 1</p>
+        <div id="quiz-container">
+            <!-- As perguntas serão geradas dinamicamente -->
+        </div>
+        <button class="btn" id="check-btn">✅ Corrigir Quiz</button>
+        <button class="btn reset-btn" id="reset-btn">🔄 Refazer Quiz</button>
+        <div id="score-display" class="score" style="display: none;"></div>
+    </div>
+
+    <script>
+        const questions = [
+            // Múltipla escolha (1-25)
+            {
+                id: 1,
+                type: 'mc',
+                text: 'A quem Paulo associa consigo no início da carta, chamando-o de “nosso irmão”?',
+                options: ['Timóteo', 'Sóstenes', 'Apolo', 'Barnabé'],
+                answer: 'b'
+            },
+            {
+                id: 2,
+                type: 'mc',
+                text: 'Paulo se apresenta como apóstolo de Cristo Jesus por:',
+                options: ['Escolha dos apóstolos em Jerusalém', 'Indicação de Barnabé', 'Vontade de Deus', 'Pedido da igreja de Corinto'],
+                answer: 'c'
+            },
+            {
+                id: 3,
+                type: 'mc',
+                text: 'Além dos coríntios, a carta é dirigida a “todos os que em todo lugar invocam o nome de nosso Senhor Jesus Cristo”. Que frase completa essa ideia?',
+                options: ['“Senhor deles e nosso”', '“Salvador de todos os homens”', '“Rei dos judeus e gentios”', '“Cabeça da igreja universal”'],
+                answer: 'a'
+            },
+            {
+                id: 4,
+                type: 'mc',
+                text: 'Por qual motivo principal Paulo dá graças a Deus pelos coríntios?',
+                options: ['Por sua hospitalidade', 'Pela graça que lhes foi dada em Cristo Jesus', 'Pelo grande número de convertidos', 'Pela fidelidade nos dízimos'],
+                answer: 'b'
+            },
+            {
+                id: 5,
+                type: 'mc',
+                text: 'Em que área específica Paulo afirma que os coríntios foram enriquecidos em Cristo?',
+                options: ['Em toda sabedoria e ciência', 'Em toda palavra e em todo conhecimento', 'Em milagres e curas', 'Em bens materiais e prosperidade'],
+                answer: 'b'
+            },
+            {
+                id: 6,
+                type: 'mc',
+                text: 'Complete: “de modo que não vos falta nenhum dom, enquanto esperais...”:',
+                options: ['“a vinda do Senhor”', '“a manifestação de nosso Senhor Jesus Cristo”', '“o batismo no Espírito Santo”', '“a ressurreição dos mortos”'],
+                answer: 'b'
+            },
+            {
+                id: 7,
+                type: 'mc',
+                text: 'Como Paulo descreve a fidelidade de Deus no fim da ação de graças?',
+                options: ['“Deus é fiel, pelo qual fostes chamados à comunhão de seu Filho Jesus Cristo”', '“Deus é poderoso para vos guardar de tropeços”', '“Fiel é aquele que prometeu e é poderoso para cumprir”', '“A fidelidade do Senhor dura para sempre”'],
+                answer: 'a'
+            },
+            {
+                id: 8,
+                type: 'mc',
+                text: 'Qual era o problema central que Paulo aborda a partir do versículo 10?',
+                options: ['Imoralidade sexual na igreja', 'Negação da ressurreição', 'Divisões e partidarismo entre os crentes', 'Uso incorreto dos dons espirituais'],
+                answer: 'c'
+            },
+            {
+                id: 9,
+                type: 'mc',
+                text: 'Segundo o capítulo 1, quais grupos estavam se formando em Corinto?',
+                options: ['Grupo de Pedro, de João, de Tiago e de Cristo', 'Grupo de Paulo, de Apolo, de Pedro e de Cristo', 'Grupo de Paulo, de Barnabé, de Apolo e de Cristo', 'Grupo de judeus, de gregos, de romanos e de Cristo'],
+                answer: 'b'
+            },
+            {
+                id: 10,
+                type: 'mc',
+                text: 'Paulo pergunta retoricamente: “Está Cristo dividido?”. O que ele pretende enfatizar com essa pergunta?',
+                options: ['Que a igreja deveria escolher um único líder', 'Que a unidade de Cristo exclui qualquer divisão legítima na igreja', 'Que cada grupo deveria ter seu próprio Cristo', 'Que apenas o grupo “de Cristo” estava certo'],
+                answer: 'b'
+            },
+            {
+                id: 11,
+                type: 'mc',
+                text: 'Paulo afirma que não foi enviado principalmente para batizar, mas para:',
+                options: ['Pregar o evangelho', 'Fazer discípulos', 'Curar enfermos', 'Estabelecer igrejas'],
+                answer: 'a'
+            },
+            {
+                id: 12,
+                type: 'mc',
+                text: 'Quem Paulo menciona ter batizado pessoalmente, além de Crispo e Gaio?',
+                options: ['Estéfanas e sua casa', 'Lídia e sua casa', 'Timóteo e Erasto', 'Áquila e Priscila'],
+                answer: 'a'
+            },
+            {
+                id: 13,
+                type: 'mc',
+                text: 'Complete: “Porque a palavra da cruz é loucura para os que se perdem, mas para nós, que somos salvos, é...”:',
+                options: ['“sabedoria de Deus”', '“poder de Deus”', '“a revelação do mistério”', '“a justiça de Deus”'],
+                answer: 'b'
+            },
+            {
+                id: 14,
+                type: 'mc',
+                text: 'Em 1 Coríntios 1:19, Paulo cita o Antigo Testamento: “Destruirei a sabedoria dos sábios e aniquilarei a inteligência dos inteligentes”. De qual livro é essa citação?',
+                options: ['Salmos', 'Provérbios', 'Isaías', 'Jó'],
+                answer: 'c'
+            },
+            {
+                id: 15,
+                type: 'mc',
+                text: 'Paulo desafia: “Onde está o sábio? Onde está o escriba? Onde está o questionador deste século?”. O que ele conclui sobre a sabedoria do mundo?',
+                options: ['Que ela foi aperfeiçoada em Cristo', 'Que Deus a tornou loucura', 'Que ela é útil para o evangelho', 'Que ainda não foi revelada'],
+                answer: 'b'
+            },
+            {
+                id: 16,
+                type: 'mc',
+                text: 'Por que, segundo o texto, o mundo não conheceu a Deus mediante a sua própria sabedoria?',
+                options: ['Porque os sábios rejeitaram os profetas', 'Porque Deus não se revelou na criação', 'Porque Deus achou por bem salvar os crentes pela loucura da pregação', 'Porque a sabedoria humana era limitada pela cultura grega'],
+                answer: 'c'
+            },
+            {
+                id: 17,
+                type: 'mc',
+                text: 'Que tipo de sinais os judeus pediam, e que tipo de sabedoria os gregos buscavam?',
+                options: ['Os judeus pediam milagres, e os gregos buscavam filosofia', 'Os judeus pediam sinais, e os gregos buscavam sabedoria', 'Os judeus pediam um Messias político, e os gregos buscavam lógica', 'Os judeus pediam ressurreição, e os gregos buscavam retórica'],
+                answer: 'b'
+            },
+            {
+                id: 18,
+                type: 'mc',
+                text: 'Como Paulo descreve a si mesmo e a pregação do evangelho em contraste com os métodos dos sábios?',
+                options: ['“Pregamos com autoridade e poder de eloquência”', '“Pregamos a Cristo crucificado, escândalo para os judeus, loucura para os gentios”', '“Pregamos a lei e os profetas com ousadia”', '“Pregamos a Cristo ressurreto, sabedoria para todos”'],
+                answer: 'b'
+            },
+            {
+                id: 19,
+                type: 'mc',
+                text: 'A expressão “escândalo para os judeus” (1:23) indica que a mensagem da cruz:',
+                options: ['Era considerada blasfêmia porque Deuteronômio diz “maldito todo aquele que for pendurado no madeiro”', 'Era rejeitada porque os judeus não criam em crucificação romana', 'Era aceita apenas pelos fariseus', 'Era um obstáculo político para a libertação de Israel'],
+                answer: 'a'
+            },
+            {
+                id: 20,
+                type: 'mc',
+                text: 'Para os que são chamados, tanto judeus como gregos, Cristo é definido como:',
+                options: ['“Poder de Deus e sabedoria de Deus”', '“Salvador e Senhor”', '“Justiça, santificação e redenção”', '“O caminho, a verdade e a vida”'],
+                answer: 'a'
+            },
+            {
+                id: 21,
+                type: 'mc',
+                text: 'Paulo afirma que a loucura de Deus é mais sábia do que os homens, e a fraqueza de Deus é mais forte do que os homens. Qual o propósito imediato dessa afirmação no contexto?',
+                options: ['Exaltar a humildade cristã', 'Mostrar que a lógica divina subverte os valores humanos de poder e sabedoria', 'Encorajar os crentes a buscar dons de milagres', 'Provar que os filósofos gregos estavam errados'],
+                answer: 'b'
+            },
+            {
+                id: 22,
+                type: 'mc',
+                text: 'Em 1:26, Paulo pede aos coríntios que considerem a própria vocação. Quais critérios humanos ele nega como base do chamado?',
+                options: ['Poucos sábios, poucos poderosos, poucos nobres', 'Poucos religiosos, poucos letrados, poucos ricos', 'Muitos sábios, muitos poderosos, muitos nobres', 'Muitos judeus, muitos gentios, muitos escravos'],
+                answer: 'a'
+            },
+            {
+                id: 23,
+                type: 'mc',
+                text: 'Deus escolheu as coisas loucas, fracas e desprezíveis do mundo para:',
+                options: ['Envergonhar os sábios e poderosos e anular as coisas que são', 'Mostrar que ele ama a humildade simplesmente', 'Ensinar que o conhecimento humano é inútil', 'Provar que os pobres são espiritualmente superiores'],
+                answer: 'a'
+            },
+            {
+                id: 24,
+                type: 'mc',
+                text: 'Complete: “Mas vós sois dele, em Cristo Jesus, o qual se nos tornou da parte de Deus sabedoria, e justiça, e santificação, e...”:',
+                options: ['“redenção”', '“glória”', '“poder”', '“vida eterna”'],
+                answer: 'a'
+            },
+            {
+                id: 25,
+                type: 'mc',
+                text: 'A conclusão “para que, como está escrito: Aquele que se gloria, glorie-se no Senhor” é uma citação de qual livro do Antigo Testamento?',
+                options: ['Salmo 34', 'Jeremias 9:23-24', 'Isaías 45:25', 'Deuteronômio 10:21'],
+                answer: 'b'
+            },
+            // Completar versículo (26-30)
+            {
+                id: 26,
+                type: 'complete',
+                text: '“Sempre dou graças a meu Deus a vosso respeito, por causa da graça de Deus que vos foi dada em Cristo Jesus; porque em tudo fostes ______________ nele, em toda palavra e em todo conhecimento.”',
+                answer: 'enriquecidos',
+                alternatives: [] // sem alternativas adicionais
+            },
+            {
+                id: 27,
+                type: 'complete',
+                text: '“Rogo-vos, porém, irmãos, pelo nome de nosso Senhor Jesus Cristo, que faleis todos a mesma coisa, e que não haja entre vós divisões; antes sejais unidos em um mesmo ______________ e em um mesmo parecer.”',
+                answer: 'sentimento',
+                alternatives: ['modo de pensar'] // aceitar ambas as traduções
+            },
+            {
+                id: 28,
+                type: 'complete',
+                text: '“Porque a respeito de vós, irmãos meus, fui informado pelos da casa de Cloé que há ______________ entre vós.”',
+                answer: 'contendas',
+                alternatives: []
+            },
+            {
+                id: 29,
+                type: 'complete',
+                text: '“Porque a palavra da cruz é loucura para os que se perecem, mas para nós, que somos salvos, é ______________ de Deus.”',
+                answer: 'poder',
+                alternatives: []
+            },
+            {
+                id: 30,
+                type: 'complete',
+                text: '“Mas Deus escolheu as coisas loucas do mundo para envergonhar os sábios; e Deus escolheu as coisas fracas do mundo para envergonhar as ______________.”',
+                answer: 'fortes',
+                alternatives: []
+            }
+        ];
+
+        const quizContainer = document.getElementById('quiz-container');
+        const checkBtn = document.getElementById('check-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const scoreDisplay = document.getElementById('score-display');
+
+        function buildQuiz() {
+            let html = '';
+            questions.forEach((q, index) => {
+                html += `<div class="question" id="q-${q.id}">`;
+                html += `<div class="q-title"><span class="q-num">${q.id}</span><span class="q-text">${q.text}</span></div>`;
+                if (q.type === 'mc') {
+                    html += `<div class="options">`;
+                    const letters = ['a', 'b', 'c', 'd'];
+                    q.options.forEach((opt, i) => {
+                        html += `
+                            <div class="option">
+                                <input type="radio" name="q${q.id}" id="q${q.id}_${letters[i]}" value="${letters[i]}">
+                                <label for="q${q.id}_${letters[i]}">${letters[i]}) ${opt}</label>
+                            </div>`;
+                    });
+                    html += `</div>`;
+                } else if (q.type === 'complete') {
+                    html += `<div class="complete-input">`;
+                    html += `<input type="text" id="q${q.id}_input" placeholder="Digite a palavra que completa...">`;
+                    html += `</div>`;
+                }
+                html += `<div class="feedback" id="feedback-${q.id}"></div>`;
+                html += `</div>`;
+            });
+            quizContainer.innerHTML = html;
+            scoreDisplay.style.display = 'none';
+            // Remove classes de correção anteriores
+        }
+
+        function normalize(str) {
+            return str.trim().toLowerCase().replace(/[^\w\sá-úãõâêîôûç]/g, '');
+        }
+
+        function checkAnswers() {
+            let score = 0;
+            questions.forEach(q => {
+                const questionDiv = document.getElementById(`q-${q.id}`);
+                const feedbackDiv = document.getElementById(`feedback-${q.id}`);
+                questionDiv.classList.remove('correct', 'incorrect');
+                let isCorrect = false;
+
+                if (q.type === 'mc') {
+                    const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                    if (selected && selected.value === q.answer) {
+                        isCorrect = true;
+                    }
+                } else if (q.type === 'complete') {
+                    const input = document.getElementById(`q${q.id}_input`);
+                    if (input) {
+                        const userAnswer = normalize(input.value);
+                        const correctAnswer = normalize(q.answer);
+                        let matched = (userAnswer === correctAnswer);
+                        if (!matched && q.alternatives) {
+                            matched = q.alternatives.some(alt => normalize(alt) === userAnswer);
+                        }
+                        if (matched) isCorrect = true;
+                    }
+                }
+
+                if (isCorrect) {
+                    score++;
+                    questionDiv.classList.add('correct');
+                    feedbackDiv.innerHTML = '<span class="correct-feedback">✔ Correto!</span>';
+                } else {
+                    questionDiv.classList.add('incorrect');
+                    let correctInfo = '';
+                    if (q.type === 'mc') {
+                        const letter = q.answer.toUpperCase();
+                        const correctOption = q.options[q.answer.charCodeAt(0) - 97];
+                        correctInfo = `A resposta correta é ${letter}) ${correctOption}`;
+                    } else {
+                        correctInfo = `Resposta: "${q.answer}"`;
+                        if (q.alternatives) correctInfo += ` (ou "${q.alternatives.join('", "')}")`;
+                    }
+                    feedbackDiv.innerHTML = `<span class="incorrect-feedback">✘ Incorreto. ${correctInfo}</span>`;
+                }
+            });
+
+            scoreDisplay.style.display = 'block';
+            scoreDisplay.innerHTML = `📊 Sua pontuação: ${score} de ${questions.length} (${Math.round(score/questions.length*100)}%)`;
+            scoreDisplay.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function resetQuiz() {
+            // Limpa seleções e inputs
+            questions.forEach(q => {
+                if (q.type === 'mc') {
+                    const radios = document.querySelectorAll(`input[name="q${q.id}"]`);
+                    radios.forEach(radio => radio.checked = false);
+                } else if (q.type === 'complete') {
+                    const input = document.getElementById(`q${q.id}_input`);
+                    if (input) input.value = '';
+                }
+                const questionDiv = document.getElementById(`q-${q.id}`);
+                if (questionDiv) questionDiv.classList.remove('correct', 'incorrect');
+                const feedbackDiv = document.getElementById(`feedback-${q.id}`);
+                if (feedbackDiv) feedbackDiv.innerHTML = '';
+            });
+            scoreDisplay.style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        buildQuiz();
+
+        checkBtn.addEventListener('click', checkAnswers);
+        resetBtn.addEventListener('click', resetQuiz);
+
+        // Permite refazer ao clicar novamente em Corrigir (já atualiza)
+    </script>
+</body>
+</html>
